@@ -331,25 +331,6 @@ void init_hashtable()
 }
 */
 
-/* 変数のハッシュ値を返す */
-int hash(char *val)
-{
-    int i;
-    int hash_no = 0;
-    for (i = 0; val[i] != '\0'; i++)
-        hash_no = ( hash_no * 33 + val[i]) % HASHSIZE;
-    return hash_no;
-}
-
-/* 変数が同じ場合1、異なる場合0を返す */
-int equal_val(char *val1, char *val2) {
-    if (strcmp(val1, val2) == 0) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 /* 登録に成功したら1、失敗したら(既に登録済みなら)0を返す */
 /*
 void insert(char *key, double data) {

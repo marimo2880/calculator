@@ -23,7 +23,7 @@ unsigned long hash_number(const char *val)
 }
 
 /* 変数がハッシュテーブルに存在する場合 */
-List find_val(const char *key)
+List find_node(const char *key)
 {
     int h;
     List ptr;
@@ -37,3 +37,43 @@ List find_val(const char *key)
     return NULL;
 }
 
+/* ハッシュテーブルを初期化 */
+void init_hashtable()
+{
+    int i;
+    for (i = 0; i < HASHSIZE; i++) {
+        hashtable[i] = NULL;
+    }
+}
+
+List create_node(const char *key, double data)
+{
+    List new_node = malloc(sizeof(List)); 
+	new_node->key = malloc(strlen(key) + 1);//+1:\0
+    strcpy(new_node->key,key);//all data copy
+    new_node->data = data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+
+/* 登録に成功したら1、失敗したら(既に登録済みなら)0を返す */
+void insert(const char *key, double data) {
+    List node;
+    node = find_node(key);
+
+    if (node == NULL) {
+    	int h = hash_number(key);
+        List new_node = create_node(key, data);
+
+        if (hashtable[h] == NULL) {
+            hashtable[h] = new_node;
+        } else {
+            List ptr;
+            for (ptr = hashtable[h]; ptr->next != NULL; ptr = ptr->next);
+            ptr->next = new_node;
+        }
+    } else {
+        node->data = data;
+    }
+}
