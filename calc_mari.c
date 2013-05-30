@@ -318,52 +318,6 @@ int SyntaxAnalysis()
     if (error == False) printf(" --------------------END SyntaxAnalysis--------------------------\n");
 }
 
-
-/* ハッシュテーブルを初期化 */
-/*
-void init_hashtable()
-{
-    int i;
-    for (i = 0; i < HASHSIZE; i++) {
-        hashtable[i].key = NULL;
-        hashtable[i].data = 0;
-    }
-}
-*/
-
-/* 登録に成功したら1、失敗したら(既に登録済みなら)0を返す */
-/*
-void insert(char *key, double data) {
-    int h = 0;
-    List ptr;
-    char *listkey;
-    ptr = malloc(sizeof(List));
-    
-    if (find_val(key) == True) {
-	//変数のデータを上書きする
-	h = hash(key);
-	ptr = equalkey;
-	ptr->data = data;
-    } else {
-	//新規登録する
-	listkey = malloc(strlen(key));
-	strcpy(listkey,key);
-
-	h = hash(key);
-	ptr = hashtable[h];
-
-	while (ptr->next != NULL) {
-	    ptr = ptr->next;
-	}
-	
-	ptr->key = listkey;
-	ptr->data = data;
-    }
-}
-*/
-
-/* ハッシュ値と変数を表示 */
-/*
 void print_hashtable()
 {
     int i;
@@ -376,7 +330,6 @@ void print_hashtable()
         }
     }
 }
-*/
 
 /* 代入文の関数 */
 int assignment()

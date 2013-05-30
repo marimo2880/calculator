@@ -12,5 +12,12 @@ typedef struct _list *List;
 
 unsigned long hash(const char *val);
 unsigned long hash_number(const char *val);
+List find_node(const char *key);
+void init_hashtable(void);
+List create_node(const char *key, double data);
+void insert(const char *key, double data);
+void print_hashtable(void);
+
+
 
 #endif /* HASH_H_ */

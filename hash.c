@@ -1,5 +1,6 @@
 #include "hash.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #define HASHSIZE 97
@@ -38,7 +39,7 @@ List find_node(const char *key)
 }
 
 /* ハッシュテーブルを初期化 */
-void init_hashtable()
+void init_hashtable(void)
 {
     int i;
     for (i = 0; i < HASHSIZE; i++) {
@@ -58,7 +59,8 @@ List create_node(const char *key, double data)
 
 
 /* 登録に成功したら1、失敗したら(既に登録済みなら)0を返す */
-void insert(const char *key, double data) {
+void insert(const char *key, double data)
+{
     List node;
     node = find_node(key);
 
@@ -75,5 +77,18 @@ void insert(const char *key, double data) {
         }
     } else {
         node->data = data;
+    }
+}
+
+void print_hashtable(void)
+{
+    int i;
+    List ptr;
+    for (i = 0; i < HASHSIZE; i++) {
+        if (hashtable[i] != NULL) {
+            for (ptr = hashtable[i]; ptr != NULL; ptr = ptr->next) {
+                printf("Hash number = %d, Value = %s, Value number =%d\n",i,ptr->key,ptr->data);
+            }
+        }
     }
 }
