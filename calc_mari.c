@@ -342,7 +342,6 @@ int hash(char *val)
 }
 
 /* 変数が同じ場合1、異なる場合0を返す */
-/*
 int equal_val(char *val1, char *val2) {
     if (strcmp(val1, val2) == 0) {
         return 1;
@@ -350,23 +349,6 @@ int equal_val(char *val1, char *val2) {
         return 0;
     }
 }
-*/
-
-/* 変数がハッシュテーブルに存在する場合True、存在しない場合Falseを返す */
-/*
-int find_val(char *key) {
-    int h;
-    List ptr;
-    h = hash(key);
-
-    for (ptr = hashtable[h]; ptr != NULL; ptr = ptr->next) {
-        if (equal_key(ptr->key,key) == 1)
-	    equalkey = ptr;
-            return (True);
-    }
-    return (False);
-}
-*/
 
 /* 登録に成功したら1、失敗したら(既に登録済みなら)0を返す */
 /*
