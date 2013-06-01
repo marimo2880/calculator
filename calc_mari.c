@@ -48,6 +48,7 @@ struct _token{
 }*token;
 
 
+
 /* 構文木の構造体 */
 struct tree{
     int token_node;//演算子の格納
@@ -318,24 +319,10 @@ int SyntaxAnalysis()
     if (error == False) printf(" --------------------END SyntaxAnalysis--------------------------\n");
 }
 
-void print_hashtable()
-{
-    int i;
-    List ptr;
-    for (i = 0; i < HASHSIZE; i++) {
-        if (hashtable[i] != NULL) {
-            for (ptr = hashtable[i]; ptr != NULL; ptr = ptr->next) {
-                printf("Hash number = %d, Value = %s, Value number =%d\n",i,ptr->key,ptr->data);
-            }
-        }
-    }
-}
-
 /* 代入文の関数 */
 int assignment()
 {
-    //insert(token[0].name,token[2].number);
-    //print_hashtable();
+    insert(token[0].name,token[2].number);
     printf("assignment\n");
     return 0;
 }
