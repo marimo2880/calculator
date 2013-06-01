@@ -110,5 +110,6 @@ double search(char *key)
     }
     printf("%s : Not exist!\n", key);
     error = True;
+    return 0.0;
 }
 
