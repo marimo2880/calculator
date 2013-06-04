@@ -1,5 +1,4 @@
 #include "hash.h"
-#include "lexical_analysis.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +24,7 @@ void print_hashtable(void)
     for (i = 0; i < HASHSIZE; i++) {
         if (hashtable[i] != NULL) {
             for (ptr = hashtable[i]; ptr != NULL; ptr = ptr->next) {
-                printf("Hash number = %d, Value = %s, Data =%f\n",i,ptr->key,ptr->data);
+                printf("Hash number = %d, Value = %s, Data =%d\n",i,ptr->key,ptr->data);
             }
         }
     }
@@ -74,6 +73,7 @@ List create_node(const char *key, double data)
     return new_node;
 }
 
+
 /* 新規登録もしくは更新 */
 void insert(const char *key, double data)
 {
@@ -96,20 +96,3 @@ void insert(const char *key, double data)
     }
     print_hashtable();
 }
-
-double search(char *key)
-{
-    int h = 0;
-    List ptr;
-    h = hash_number(key);
-
-    for (ptr = hashtable[h]; ptr != NULL; ptr = ptr->next) {
-        if (strcmp(ptr->key,key) == 0) {
-            return ptr->data;
-        }
-    }
-    printf("%s : Not exist!!!\n", key);
-    error = True;
-    return 0.0;
-}
-
