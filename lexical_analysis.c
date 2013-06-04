@@ -13,16 +13,17 @@ int equal_flag = 0;
 /* トークンとグローバル変数を初期化 */
 void init_lexical(void)
 {
-    
+    token = malloc(100 * sizeof(*token));
+
     int i;
     for (i = 0; i < 100; i++) {
         token[i].name = NULL;
         token[i].number = 0;
         token[i].type = 0;
     }
-    
-    
-    
+
+
+
     ch = '\0';
     total_token = 0;
     ch_no = 0;
@@ -103,7 +104,7 @@ void lexical_analysis(void)
         case '+':
             token[i++].type = Plus;
             printf("+   ");
-            total_token++;            
+            total_token++;
             read_char();
             break;
         case '-':
