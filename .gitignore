@@ -1,1 +1,5 @@
-mari
+*.o
+*~
+
+calc
+lexical

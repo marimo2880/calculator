@@ -1,21 +1,21 @@
-/* ¥Ø¥Ã¥À¡¼¥Õ¥¡¥¤¥ë¤ò¥¤¥ó¥¯¥ë¡¼¥É */
+/* ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-/* ¥°¥í¡¼¥Ğ¥ëÊÑ¿ô¤ÎÀë¸À */
-int ch_no = 0;//ch_noÈÖÌÜ¤ÎÊ¸»ú¤òÆÉ¤à
-char ch;//ÆÉ¤ß¼è¤Ã¤¿Ê¸»ú
-char *statement = NULL;//ÆşÎÏ¤µ¤ì¤¿Ê¸»úÎó¤ò³ÊÇ¼
-int tp = 0;//tpÈÖÌÜ¤Îtoken¤òÆÉ¤à
-int token_type = 0;//ÆÉ¤ß¼è¤Ã¤¿¥È¡¼¥¯¥ó¤Î¼ïÎà
-double token_const = 0;//ÆÉ¤ß¼è¤Ã¤¿¥È¡¼¥¯¥ó¤Î¿ôÃÍ
-char *token_name = NULL;//ÆÉ¤ß¼è¤Ã¤¿¥È¡¼¥¯¥ó¤ÎÊÑ¿ô
-int equal_flag = 0;//¥¤¥³¡¼¥ë¤Î¿ô
-int pair_check = 0;//³ç¸Ì¤Î¿ô
-int total_token = 0;//¥È¡¼¥¯¥ó¤Î¿ô
-int error;//¥¨¥é¡¼¤¬¤¢¤ë¤«¤É¤¦¤«(True or False)
+/* ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€ */
+int ch_no = 0;//ch_noç•ªç›®ã®æ–‡å­—ã‚’èª­ã‚€
+char ch;//èª­ã¿å–ã£ãŸæ–‡å­—
+char *statement = NULL;//å…¥åŠ›ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’æ ¼ç´
+int tp = 0;//tpç•ªç›®ã®tokenã‚’èª­ã‚€
+int token_type = 0;//èª­ã¿å–ã£ãŸãƒˆãƒ¼ã‚¯ãƒ³ã®ç¨®é¡
+double token_const = 0;//èª­ã¿å–ã£ãŸãƒˆãƒ¼ã‚¯ãƒ³ã®æ•°å€¤
+char *token_name = NULL;//èª­ã¿å–ã£ãŸãƒˆãƒ¼ã‚¯ãƒ³ã®å¤‰æ•°
+int equal_flag = 0;//ã‚¤ã‚³ãƒ¼ãƒ«ã®æ•°
+int pair_check = 0;//æ‹¬å¼§ã®æ•°
+int total_token = 0;//ãƒˆãƒ¼ã‚¯ãƒ³ã®æ•°
+int error;//ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚‹ã‹ã©ã†ã‹(True or False)
 
 enum{
     True = 1, False = -1
@@ -23,71 +23,71 @@ enum{
 
 enum{
 
-    /* ÊÑ¿ô,¿ôÃÍ */
+    /* å¤‰æ•°,æ•°å€¤ */
     Name, Const,
 
-    /* ±é»»»Ò(+,-,*,/,=) */
+    /* æ¼”ç®—å­(+,-,*,/,=) */
     Plus, Minus, Times, Divide, Equal,
 
-    /* ³ç¸Ì */
+    /* æ‹¬å¼§ */
     Lpra, Rpra,
 
-    /* ¸í¤ê,\0,EOF */
+    /* èª¤ã‚Š,\0,EOF */
 
     Nontoken, Endtoken//, Endfile
 };
 
 
-/* ¥È¡¼¥¯¥ó¤Î¾ğÊó¤ò³ÊÇ¼ */
+/* ãƒˆãƒ¼ã‚¯ãƒ³ã®æƒ…å ±ã‚’æ ¼ç´ */
 struct _token{
-    char *name;//ÊÑ¿ô
-    double number;//¿ôÃÍ
-    int type;//¥È¡¼¥¯¥ó¤Î¼ïÎà
+    char *name;//å¤‰æ•°
+    double number;//æ•°å€¤
+    int type;//ãƒˆãƒ¼ã‚¯ãƒ³ã®ç¨®é¡
 }*token;
 
 
-/* ¹½Ê¸ÌÚ¤Î¹½Â¤ÂÎ */
+/* æ§‹æ–‡æœ¨ã®æ§‹é€ ä½“ */
 struct tree{
-    int token_node;//±é»»»Ò¤Î³ÊÇ¼
-    double token_number;//¿ôÃÍ¤Î³ÊÇ¼
-    char *token_value;//ÊÑ¿ô¤Î³ÊÇ¼
-    int tree_depth;//ÌÚ¤Î¿¼¤µ
-    struct tree *left;//º¸¤ÎÉôÊ¬ÌÚ
-    struct tree *right;///±¦¤ÎÉôÊ¬ÌÚ
+    int token_node;//æ¼”ç®—å­ã®æ ¼ç´
+    double token_number;//æ•°å€¤ã®æ ¼ç´
+    char *token_value;//å¤‰æ•°ã®æ ¼ç´
+    int tree_depth;//æœ¨ã®æ·±ã•
+    struct tree *left;//å·¦ã®éƒ¨åˆ†æœ¨
+    struct tree *right;///å³ã®éƒ¨åˆ†æœ¨
 };
 
 typedef struct tree *Tree;
 
-Tree head;//Tree·¿¤Î¹½Â¤ÂÎhead¤òÀë¸À
+Tree head;//Treeå‹ã®æ§‹é€ ä½“headã‚’å®£è¨€
 
-/* ´Ø¿ô¤ÎÀë¸À */
-void init_token();//¥È¡¼¥¯¥ó¤Î½é´ü²½
+/* é–¢æ•°ã®å®£è¨€ */
+void init_token();//ãƒˆãƒ¼ã‚¯ãƒ³ã®åˆæœŸåŒ–
 //void init_statement(char*);
-//void init_tree();//¹½Ê¸ÌÚ¤Î½é´ü²½
-void read_char();//ÆşÎÏ¤µ¤ì¤¿Ê¸»úÎó¤ò°ìÊ¸»ú¤º¤Ä»²¾È¤¹¤ë
-char* convert_to_value();//ÊÑ¿ô¤Î¤Ş¤È¤Ş¤ê¤ËÊÑ´¹¤¹¤ë
-double convert_to_number();//¿ôÃÍ¤Î¤Ş¤È¤Ş¤ê¤ËÊÑ´¹¤¹¤ë
-void LexicalAnalysis();//»ú¶ç²òÀÏ¤ò¹Ô¤¦
+//void init_tree();//æ§‹æ–‡æœ¨ã®åˆæœŸåŒ–
+void read_char();//å…¥åŠ›ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’ä¸€æ–‡å­—ãšã¤å‚ç…§ã™ã‚‹
+char* convert_to_value();//å¤‰æ•°ã®ã¾ã¨ã¾ã‚Šã«å¤‰æ›ã™ã‚‹
+double convert_to_number();//æ•°å€¤ã®ã¾ã¨ã¾ã‚Šã«å¤‰æ›ã™ã‚‹
+void LexicalAnalysis();//å­—å¥è§£æã‚’è¡Œã†
 
-int read_token();//¼¡¤Î¥È¡¼¥¯¥ó¤òÆÉ¤à
-double read_num();//¿ô»ú¤ÎÆÉ¤ß¤³¤ß
-int SyntaxAnalysis();//¹½Ê¸²òÀÏ¤ò¹Ô¤¦
-int assignment();//ÂåÆş¤Î½èÍı¤ò¹Ô¤¦
-Tree expression();//¼°¤Î´Ø¿ô
-Tree term();//¹à¤Î´Ø¿ô
-Tree primary();//ÁÇ¤Î´Ø¿ô
-void print_tree(Tree, int);//ÌÚ¤ÎÉ½¼¨¤ò¹Ô¤¦
+int read_token();//æ¬¡ã®ãƒˆãƒ¼ã‚¯ãƒ³ã‚’èª­ã‚€
+double read_num();//æ•°å­—ã®èª­ã¿ã“ã¿
+int SyntaxAnalysis();//æ§‹æ–‡è§£æã‚’è¡Œã†
+int assignment();//ä»£å…¥ã®å‡¦ç†ã‚’è¡Œã†
+Tree expression();//å¼ã®é–¢æ•°
+Tree term();//é …ã®é–¢æ•°
+Tree primary();//ç´ ã®é–¢æ•°
+void print_tree(Tree, int);//æœ¨ã®è¡¨ç¤ºã‚’è¡Œã†
 
-double SemanticAnalysis(Tree);//°ÕÌ£²òÀÏ¤ò¹Ô¤¦
+double SemanticAnalysis(Tree);//æ„å‘³è§£æã‚’è¡Œã†
 
-/* ÆşÎÏ¤µ¤ì¤¿Ê¸»úÎó¤ò°ìÊ¸»ú¤º¤Ä»²¾È¤¹¤ë */
+/* å…¥åŠ›ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’ä¸€æ–‡å­—ãšã¤å‚ç…§ã™ã‚‹ */
 void read_char()
 {
     ch = statement[ch_no];
     if (ch != '\0') ch_no += 1;
 }
 
-/* ¥È¡¼¥¯¥ó¤ä¥°¥í¡¼¥Ğ¥ëÊÑ¿ô¤ò½é´ü²½ */
+/* ãƒˆãƒ¼ã‚¯ãƒ³ã‚„ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã‚’åˆæœŸåŒ– */
 void init_token()
 {
     int i;
@@ -105,7 +105,7 @@ void init_token()
     error = False;
 }
 
-/* ¹½Ê¸ÌÚ¤ò½é´ü²½ */
+/* æ§‹æ–‡æœ¨ã‚’åˆæœŸåŒ– */
 /*
 void init_tree()
 {
@@ -118,7 +118,7 @@ void init_tree()
 }
 */
 
-/* ±Ñ»ú¤òÊÑ¿ô¤ËÊÑ´¹ */
+/* è‹±å­—ã‚’å¤‰æ•°ã«å¤‰æ› */
 char* convert_to_value()
 {
     int i = 0;
@@ -132,7 +132,7 @@ char* convert_to_value()
     return value;
 }
 
-/* ¿ô»ú¤ò¿ôÃÍ¤ËÊÑ´¹ */
+/* æ•°å­—ã‚’æ•°å€¤ã«å¤‰æ› */
 double convert_to_number()
 {
     double number = 0.0;
@@ -143,7 +143,7 @@ double convert_to_number()
     return number;
 }
 
-/* »ú¶ç²òÀÏ */
+/* å­—å¥è§£æ */
 void LexicalAnalysis()
 {
     printf(" ----------------------LexicalAnalysis--------------------------\n\n");
@@ -245,7 +245,7 @@ void LexicalAnalysis()
     if (error == False) printf("\n\n -------------------END LexcialAnalysis-------------------------\n");
 }
 
-/* ¼¡¤Î¥È¡¼¥¯¥ó¤Î¥¿¥¤¥×¡¦¿ôÃÍ¡¦ÊÑ¿ô¤Î¥¹¥Ú¥ë¤òÆÀ¤ë */
+/* æ¬¡ã®ãƒˆãƒ¼ã‚¯ãƒ³ã®ã‚¿ã‚¤ãƒ—ãƒ»æ•°å€¤ãƒ»å¤‰æ•°ã®ã‚¹ãƒšãƒ«ã‚’å¾—ã‚‹ */
 int read_token()
 {
     token_type = token[tp].type;
@@ -262,12 +262,12 @@ double read_num(){
 
 }
 
-/* ¹½Ê¸²òÀÏ */
+/* æ§‹æ–‡è§£æ */
 int SyntaxAnalysis()
 {
     if (error == False) printf("\n ----------------------SyntaxAnalysis---------------------------\n");
 
-    if(pair_check != 0){//³ç¸Ì¤Î¸Ä¿ô¤¬¹ç¤ï¤Ê¤«¤Ã¤¿¤é¥¨¥é¡¼
+    if(pair_check != 0){//æ‹¬å¼§ã®å€‹æ•°ãŒåˆã‚ãªã‹ã£ãŸã‚‰ã‚¨ãƒ©ãƒ¼
 	 if (error == False) printf(" Syntax Error!!\n");
 	 error = True;
     }
@@ -281,12 +281,12 @@ int SyntaxAnalysis()
 	break;
     }
 
-    read_token();//¥È¡¼¥¯¥ó0ÈÖÌÜ¤òÆÉ¤à
+    read_token();//ãƒˆãƒ¼ã‚¯ãƒ³0ç•ªç›®ã‚’èª­ã‚€
 
-    if (equal_flag == 1){//ÂåÆşÊ¸¤À¤Ã¤¿¤éÂåÆş¤Î´Ø¿ô¤ò¸Æ¤Ó½Ğ¤¹ 
+    if (equal_flag == 1){//ä»£å…¥æ–‡ã ã£ãŸã‚‰ä»£å…¥ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã™ 
 	assignment();
     } else {
-	head = expression();//¤½¤¦¤Ç¤Ê¤«¤Ã¤¿¤é¼°¤Î´Ø¿ô¤ò¸Æ¤Ó½Ğ¤¹
+	head = expression();//ãã†ã§ãªã‹ã£ãŸã‚‰å¼ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã™
     }
    
     if (error == False) printf(" Tree:\n");
@@ -296,28 +296,28 @@ int SyntaxAnalysis()
     if (error == False) printf(" --------------------END SyntaxAnalysis--------------------------\n");
 }
 
-/* ÂåÆşÊ¸¤Î´Ø¿ô */
+/* ä»£å…¥æ–‡ã®é–¢æ•° */
 int assignment()
 {
     printf("assignment\n");
     return 0;
 }
 
-/* ¼°¤Î´Ø¿ô */
+/* å¼ã®é–¢æ•° */
 Tree expression()
 {
     int count =0;
     Tree head, hidari, plus, minus, zero;
 
 
-    if (token_type == Minus){//¼°¤Î¤Ï¤¸¤á¤¬-¤À¤Ã¤¿¤é
+    if (token_type == Minus){//å¼ã®ã¯ã˜ã‚ãŒ-ã ã£ãŸã‚‰
 	read_token();
 	zero = malloc(sizeof(*zero));
-	zero->token_node = Const; zero->token_number = 0; //¿ôÃÍ0¤Î¥Î¡¼¥É¤òºîÀ®
+	zero->token_node = Const; zero->token_number = 0; //æ•°å€¤0ã®ãƒãƒ¼ãƒ‰ã‚’ä½œæˆ
 	minus = malloc(sizeof(*minus)); minus->token_node = Minus;
 	hidari = minus; minus->right = term(); minus->left = zero;
     }else{
-	/*¼°¤Î¤Ï¤¸¤á¤òter¤«¤é¼õ¤±¼è¤ë¾ì¹ç*/
+	/*å¼ã®ã¯ã˜ã‚ã‚’terã‹ã‚‰å—ã‘å–ã‚‹å ´åˆ*/
 	hidari = term();
     }
 
@@ -325,7 +325,7 @@ Tree expression()
 	switch(token_type){
 	case Plus:
 	    read_token();
-	    /*ÌÚ¤òºî¤ë*/
+	    /*æœ¨ã‚’ä½œã‚‹*/
 	    plus = malloc(sizeof(*plus)); plus->token_node = Plus;
 	    head = plus; plus->right = term(); plus->left = hidari;
 	    hidari = plus;
@@ -334,7 +334,7 @@ Tree expression()
 	
 	case Minus:
 	    read_token();
-	    /*ÌÚ¤òºî¤ë*/
+	    /*æœ¨ã‚’ä½œã‚‹*/
 	    minus = malloc(sizeof(*minus)); minus->token_node = Minus;
 	    head = minus; minus->right = term(); minus->left = hidari;
 	    hidari = minus;
@@ -343,7 +343,7 @@ Tree expression()
 	}
     
     }
-    // printf("head node ---  %d\n",head->token_node);//¡Ü¥Î¡¼¥É¤Î½ĞÎÏ
+    // printf("head node ---  %d\n",head->token_node);//ï¼‹ãƒãƒ¼ãƒ‰ã®å‡ºåŠ›
 
     if(count == 0){
 	head = hidari;
@@ -355,7 +355,7 @@ Tree expression()
 
 }
 
-/* ¹à¤Î´Ø¿ô */
+/* é …ã®é–¢æ•° */
 Tree term()
 {
     int count = 0;
@@ -367,7 +367,7 @@ Tree term()
 	switch(token_type){
 	case Times:
 	    read_token();
-	    /*ÌÚ¤ò¤Ä¤¯¤ë*/
+	    /*æœ¨ã‚’ã¤ãã‚‹*/
 	    times = malloc(sizeof(*times)); times->token_node = Times;
 	    head = times; times->right = primary(); times->left = hidari;
 	    hidari = times;
@@ -377,7 +377,7 @@ Tree term()
 
 	case Divide:
 	    read_token();
-	    /*ÌÚ¤ò¤Ä¤¯¤ë*/
+	    /*æœ¨ã‚’ã¤ãã‚‹*/
 	    divide = malloc(sizeof(*divide)); divide->token_node = Divide;
 	    head = divide; divide->right = primary(); divide->left = hidari;
 	    hidari = divide;
@@ -395,34 +395,34 @@ Tree term()
 
 }
 
-/* ÁÇ¤Î´Ø¿ô */
+/* ç´ ã®é–¢æ•° */
 Tree primary()
 {
     Tree head, cons, name;
 
     switch(token_type){
     case Const:
-	/*ÌÚ¤òºî¤ë*/
+	/*æœ¨ã‚’ä½œã‚‹*/
 	cons = malloc(sizeof(*cons)); cons->token_number = read_num();
 	cons->token_node = Const;
 //	printf("token_const %lf",token_const);
-	head = cons; cons->left = NULL; cons->right = NULL; //¿ôÃÍ¤ÎÌÚ¤òºî¤ë
+	head = cons; cons->left = NULL; cons->right = NULL; //æ•°å€¤ã®æœ¨ã‚’ä½œã‚‹
 
-	read_token();//ÆÉ¤ß¿Ê¤á¤ë¡£½é²ó¤Ê¤é1+2*3¤À¤Ã¤¿¤é+¤ò¤ß¤ë
+	read_token();//èª­ã¿é€²ã‚ã‚‹ã€‚åˆå›ãªã‚‰1+2*3ã ã£ãŸã‚‰+ã‚’ã¿ã‚‹
 	break;
 
     case Name:
-	/*ÌÚ¤òºî¤ë*/
+	/*æœ¨ã‚’ä½œã‚‹*/
 	name = malloc(sizeof(*name)); name->token_value = token_name;
-	head = name; name->left = NULL; name->right = NULL;//ÊÑ¿ôÌ¾¤ÎÌÚ¤òºî¤ë
+	head = name; name->left = NULL; name->right = NULL;//å¤‰æ•°åã®æœ¨ã‚’ä½œã‚‹
 	name->token_node = Name;
 	read_token();
 	break;
 
-    case Lpra://head¤Ëexpression()¤«¤éÊÖ¤Ã¤Æ¤­¤¿¤â¤Î¤òÆş¤ì¤ë¡£
-	read_token();//³ç¸Ì¤ÎÃæ¤ò°ì¤ÄÆÉ¤à
-	head = expression();//¤³¤³¤Ï·ë¹½²ø¤·¤¤¡£¼°¤È¤·¤Æ³ç¸ÌÆâ¤ò½èÍı¡£ÊÄ¤¸³ç¸Ì¤Î¥È¡¼¥¯¥ó¸«¤Æ¤¤¤ë¤È¤­¤ËÈ´¤±¤Æ¤¯¤ë¤Ï¤º
-	if(token_type == Rpra){//¤³¤³¤âtoken_type»È¤¦¤È¾å¤Îswitch¤È¤Î·ó¤Í¹ç¤¤Âç¾æÉ×¤Ê¤Î¤«¤Ê
+    case Lpra://headã«expression()ã‹ã‚‰è¿”ã£ã¦ããŸã‚‚ã®ã‚’å…¥ã‚Œã‚‹ã€‚
+	read_token();//æ‹¬å¼§ã®ä¸­ã‚’ä¸€ã¤èª­ã‚€
+	head = expression();//ã“ã“ã¯çµæ§‹æ€ªã—ã„ã€‚å¼ã¨ã—ã¦æ‹¬å¼§å†…ã‚’å‡¦ç†ã€‚é–‰ã˜æ‹¬å¼§ã®ãƒˆãƒ¼ã‚¯ãƒ³è¦‹ã¦ã„ã‚‹ã¨ãã«æŠœã‘ã¦ãã‚‹ã¯ãš
+	if(token_type == Rpra){//ã“ã“ã‚‚token_typeä½¿ã†ã¨ä¸Šã®switchã¨ã®å…¼ã­åˆã„å¤§ä¸ˆå¤«ãªã®ã‹ãª
 	read_token();
 	}else{
 	     if (error == False) printf(" Syntax Error!!\n");
@@ -431,7 +431,7 @@ Tree primary()
 	break;
 		
     default:
-	 if (error == False) printf(" Syntax Error!!\n");//¥¨¥é¡¼¤Î´Ø¿ô¤â¤¢¤È¤ÇÄÉ²Ã¤¹¤ë
+	 if (error == False) printf(" Syntax Error!!\n");//ã‚¨ãƒ©ãƒ¼ã®é–¢æ•°ã‚‚ã‚ã¨ã§è¿½åŠ ã™ã‚‹
 	error = True;
 	break;
        
@@ -442,7 +442,7 @@ Tree primary()
 
 }
 
-/* ¹½Ê¸ÌÚ¤Î¥×¥ê¥ó¥È */
+/* æ§‹æ–‡æœ¨ã®ãƒ—ãƒªãƒ³ãƒˆ */
 void print_tree(Tree head, int h){
     if (error == False){
 	int i;
@@ -452,7 +452,7 @@ void print_tree(Tree head, int h){
 	    for(i = 0; i < h; i++){
 		printf("\t");
 	    }
-	    /*token_node¤Î¼ïÎà¤Ë¤è¤Ã¤Æprint¤¹¤ë¤â¤Î¤ò¤ï¤±¤ë*/
+	    /*token_nodeã®ç¨®é¡ã«ã‚ˆã£ã¦printã™ã‚‹ã‚‚ã®ã‚’ã‚ã‘ã‚‹*/
 	    switch(head->token_node){
 	    case Name:
 		head->tree_depth = h;
@@ -497,26 +497,26 @@ double SemanticAnalysis(Tree head){
 		break;
 
 	    case Plus:
-		//	head->token_node = Const;//¥È¡¼¥¯¥ó¤Î¼ïÎà¤òconst¤ËÊÑ¹¹
-		return SemanticAnalysis(head->left) + SemanticAnalysis(head->right);//·×»»¤ò¹Ô¤¦
+		//	head->token_node = Const;//ãƒˆãƒ¼ã‚¯ãƒ³ã®ç¨®é¡ã‚’constã«å¤‰æ›´
+		return SemanticAnalysis(head->left) + SemanticAnalysis(head->right);//è¨ˆç®—ã‚’è¡Œã†
 		free(head->left);
 		free(head->right);
 		break;
 
 	    case Minus:
-		return SemanticAnalysis(head->left) - SemanticAnalysis(head->right);//·×»»¤ò¹Ô¤¦
+		return SemanticAnalysis(head->left) - SemanticAnalysis(head->right);//è¨ˆç®—ã‚’è¡Œã†
 		free(head->left);
 		free(head->right);
 		break;
 
 	    case Times:
-	        return SemanticAnalysis(head->left) * SemanticAnalysis(head->right);//·×»»¤ò¹Ô¤¦
+	        return SemanticAnalysis(head->left) * SemanticAnalysis(head->right);//è¨ˆç®—ã‚’è¡Œã†
 		free(head->left);
 		free(head->right);
 		break;
 
 	    case Divide:
-	        return SemanticAnalysis(head->left) / SemanticAnalysis(head->right);//·×»»¤ò¹Ô¤¦
+	        return SemanticAnalysis(head->left) / SemanticAnalysis(head->right);//è¨ˆç®—ã‚’è¡Œã†
 		free(head->left);
 		free(head->right);
 		break;
@@ -532,7 +532,7 @@ double SemanticAnalysis(Tree head){
     //  return num;
 }
 
-/* main´Ø¿ô */
+/* mainé–¢æ•° */
 int main()
 {  
 	
@@ -541,11 +541,11 @@ int main()
 	double num = 0;
 
 	statement = (char*)malloc(sizeof(*statement)*100);	
-	token = malloc(sizeof(*token)*100);//¥È¡¼¥¯¥óÎÎ°è¤Î³ÎÊİ   
+	token = malloc(sizeof(*token)*100);//ãƒˆãƒ¼ã‚¯ãƒ³é ˜åŸŸã®ç¢ºä¿   
 	//	init_statement(statement);
 	init_token();
       
-        /* ÆşÎÏ¤ò¼õ¤±ÉÕ¤±¤ë */
+        /* å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ã‚‹ */
 	printf("\n > ");
 	while ((statement[i++] = getchar()) != '\n') ;
 	statement[i-1] = '\0';
@@ -554,14 +554,14 @@ int main()
  
 
 	//init_tree();
-	/* »ú¶ç²òÀÏ */
+	/* å­—å¥è§£æ */
 	LexicalAnalysis();
 
 
-        /* ¹½Ê¸²òÀÏ */
+        /* æ§‹æ–‡è§£æ */
         SyntaxAnalysis();
 	if (error == False){
-	/*°ÕÌ£²òÀÏ*/
+	/*æ„å‘³è§£æ*/
 	    printf("\n\n ----------------------SemanticAnalysis--------------------------\n");
 	    num = SemanticAnalysis(head);
 	    printf(" Ans = %lf\n",num);

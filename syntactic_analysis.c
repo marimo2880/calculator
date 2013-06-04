@@ -26,7 +26,7 @@ int read_token(void)
     token_name = token[tp].name;
     if (token_type != Endtoken) {
 	tp++;
-    } 
+    }
     return token_type;
 }
 
@@ -65,7 +65,7 @@ void syntactic_analysis(void)
 	if (error == False) printf(" --------------------END SyntaxAnalysis--------------------------\n");
     }
 
-    if (equal_flag == 1){//代入文だったら代入の関数を呼び出す 
+    if (equal_flag == 1){//代入文だったら代入の関数を呼び出す
 	assignment();
     }
 }
@@ -84,10 +84,10 @@ void assignment(void)
 
     read_token();
     read_token();
-    
+
     equal = malloc(sizeof(*equal));
     equal->token_node = Equal; equal->right = expression(); equal->left = hensu;
-    
+
     print_tree(equal, 0);//=を根とした木の表示
     if (error == False) printf(" --------------------END SyntaxAnalysis--------------------------\n");
     val_info = semantic_analysis(equal->right);
@@ -121,7 +121,7 @@ Tree expression(void)
 	    hidari = plus;
 	    count++;
 	    break;
-	
+
 	case Minus:
 	    read_token();
 	    /*木を作る*/
@@ -131,7 +131,7 @@ Tree expression(void)
 	    count++;
 	    break;
 	}
-    
+
     }
     // printf("head node ---  %d\n",head->token_node);//＋ノードの出力
 
@@ -190,7 +190,8 @@ Tree primary(void)
     switch(token_type){
     case Const:
 	/*木を作る*/
-	cons = malloc(sizeof(*cons)); cons->token_number = read_num();
+	cons = malloc(sizeof(*cons));
+  cons->token_number = read_num();
 	cons->token_node = Const;
 //	printf("token_const %lf",token_const);
 	head = cons; cons->left = NULL; cons->right = NULL; //数値の木を作る
@@ -222,9 +223,9 @@ Tree primary(void)
 	 if (error == False) printf(" Syntax Error!!\n");//エラーの関数もあとで追加する
 	 error = True;
 	 break;
-       
+
     }
-   
+
 //    printf("primary\n");
     return head;
 }
@@ -233,7 +234,7 @@ Tree primary(void)
 void print_tree(Tree head, int h){
     if (error == False){
 	int i;
-	
+
 	if(head != NULL){
 	    print_tree(head->right, h + 1);
 	    for(i = 0; i < h; i++){
