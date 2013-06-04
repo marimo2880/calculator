@@ -4,7 +4,7 @@
 
 CC = gcc
 #CFLAGS = -O2 -g -Wall
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Wextra
 
 TARGET = calc
 OBJS = calculator.o lexical_analysis.o syntactic_analysis.o semantic_analysis.o hash.o

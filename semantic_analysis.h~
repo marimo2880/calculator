@@ -1,6 +1,0 @@
-#ifndef SEMANTIC_H_
-#define SEMANTIC_H_
-
-double semantic_analysis(Tree head);//意味解析を行う
-
-#endif /* SEMANTIC_H_ */
